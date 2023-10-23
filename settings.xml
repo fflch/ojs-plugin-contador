@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plugin_settings SYSTEM "../../../lib/pkp/dtd/pluginSettings.dtd">
+
+<!--
+  * settings.xml
+  -->
+
+<plugin_settings>
+	<setting type="bool">
+		<name>deepStat</name>
+		<value>false</value>
+	</setting>
+	<setting type="int">
+		<name>deepStat</name>
+		<value>0</value>
+	</setting>
+</plugin_settings>
+
