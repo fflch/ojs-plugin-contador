@@ -33,13 +33,17 @@ class deepStat extends BlockPlugin {
         }
 
 		// Chama a função para obter o número de revistas.
-        $totalRevistas = $this->totalJournals();     
+        $totalRevistas = $this->totalJournals(); 
+        $totalIssues = $this->totalIssues(); 
+        $totalArticles = $this->totalArticles();      
         
         $templateMgr->assign([
         // Variável com texto simples.
         'madeByText' => 'Estatísticas do portal:',
         // Variável que contém o número de revistas.
         'totalRevistas' => $totalRevistas, 
+        'totalIssues' =>$totalIssues,
+        'totalArticles' =>$totalArticles,
     ]);
     
     return parent::getContents($templateMgr, $request);
@@ -62,12 +66,38 @@ class deepStat extends BlockPlugin {
     }
 
 
+//funcao que pega o numero de fasciculos (issue)
+public function totalIssues() {
+    try {
+        $pdo = new PDO("mysql:host={$this->databaseHost};dbname={$this->databaseName}", $this->databaseUsername, $this->databasePassword);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $query = "SELECT COUNT(*) as total FROM issues WHERE published = 1"; // Conta o número de fascículos publicados.
+        $stmt = $pdo->query($query);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $totalIssues = $result['total'];
 
+        return $totalIssues;
+    } catch (PDOException $e) {
+        return "Erro ao conectar ao banco de dados: " . $e->getMessage();
+    }
+}
 
+//funcao que pega o numero de Artigos publicados
+public function totalArticles() {
+    try {
+        $pdo = new PDO("mysql:host={$this->databaseHost};dbname={$this->databaseName}", $this->databaseUsername, $this->databasePassword);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $query = "SELECT COUNT(*) as total FROM publications WHERE status = 3"; // Conta o número de artigos publicados.
+        // ou $query = "SELECT COUNT(*) as total FROM submissions WHERE status = 3";
+        $stmt = $pdo->query($query);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $totalArticles = $result['total'];
 
-
-
-
+        return $totalArticles;
+    } catch (PDOException $e) {
+        return "Erro ao conectar ao banco de dados: " . $e->getMessage();
+    }
+}
 
 
 
