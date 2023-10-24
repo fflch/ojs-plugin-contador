@@ -7,7 +7,8 @@
  Quantidade de Revistas: {$totalRevistas}<br>
  Quantidade de Fascículos: {$totalIssues}<br>
  Quantidade de Artigos: {$totalArticles}<br>
-   
+ Quantidade de Acessos: {$totalAcess}<br>
+ Quantidade de Downloads: {$totalDownloads}
 
 
 

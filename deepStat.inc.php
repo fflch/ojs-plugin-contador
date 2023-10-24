@@ -35,7 +35,8 @@ class deepStat extends BlockPlugin {
 		// Chama a função para obter o número de revistas.
         $totalRevistas = $this->totalJournals(); 
         $totalIssues = $this->totalIssues(); 
-        $totalArticles = $this->totalArticles();      
+        $totalArticles = $this->totalArticles();  
+        $totalAcess = $this->totalAcess();      
         
         $templateMgr->assign([
         // Variável com texto simples.
@@ -44,6 +45,7 @@ class deepStat extends BlockPlugin {
         'totalRevistas' => $totalRevistas, 
         'totalIssues' =>$totalIssues,
         'totalArticles' =>$totalArticles,
+        'totalAcess' =>$totalAcess,
     ]);
     
     return parent::getContents($templateMgr, $request);
@@ -99,6 +101,22 @@ public function totalArticles() {
     }
 }
 
+//funcao que pega o numero total de acessos ao portal
+public function totalAcess() {
+    try {
+        $pdo = new PDO("mysql:host={$this->databaseHost};dbname={$this->databaseName}", $this->databaseUsername, $this->databasePassword);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        //evitando linhas NULL
+        $query = "SELECT SUM(metric) as total FROM metrics WHERE submission_id IS NOT NULL"; // Soma os valores da coluna 'metric' onde 'submission_id' não é nulo.
+        $stmt = $pdo->query($query);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $totalAcess = $result['total'];
+
+        return $totalAcess;
+    } catch (PDOException $e) {
+        return "Erro ao conectar ao banco de dados: " . $e->getMessage();
+    }
+}
 
 
 
