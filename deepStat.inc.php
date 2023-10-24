@@ -33,11 +33,11 @@ class deepStat extends BlockPlugin {
         }
 
 		// Chama a função para obter o número de revistas.
-        $totalRevistas = $this->obterDados();     
+        $totalRevistas = $this->totalJournals();     
         
         $templateMgr->assign([
         // Variável com texto simples.
-        'madeByText' => 'Made with ❤ by the Public Knowledge Project',
+        'madeByText' => 'Estatísticas do portal:',
         // Variável que contém o número de revistas.
         'totalRevistas' => $totalRevistas, 
     ]);
@@ -46,11 +46,11 @@ class deepStat extends BlockPlugin {
     }
 
     //funcao que pega o numero de revistas
-	public function obterDados() {
+	public function totalJournals() {
         try {
             $pdo = new PDO("mysql:host={$this->databaseHost};dbname={$this->databaseName}", $this->databaseUsername, $this->databasePassword);
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $query = "SELECT COUNT(*) as total FROM journals"; // Conta o número de revistas.
+            $query = "SELECT COUNT(*) as total FROM journals WHERE enabled = 1"; // Conta o número de revistas ativas.
             $stmt = $pdo->query($query);
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             $totalRevistas = $result['total'];
