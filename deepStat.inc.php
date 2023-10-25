@@ -1,12 +1,9 @@
 <?php
-
 /**
  * @file plugins/blocks/deepStat/deepStat.inc.php
  */
 
-
-
-import('lib.pkp.classes.plugins.BlockPlugin');
+ import('lib.pkp.classes.plugins.BlockPlugin');
 
 class deepStat extends BlockPlugin {
 	//variaveis do banco de dados
@@ -36,7 +33,8 @@ class deepStat extends BlockPlugin {
         $totalRevistas = $this->totalJournals(); 
         $totalIssues = $this->totalIssues(); 
         $totalArticles = $this->totalArticles();  
-        $totalAcess = $this->totalAcess();      
+        $totalAcess = $this->totalAcess();   
+        $totalDownloads = $this->totalDownloads();     
         
         $templateMgr->assign([
         // Variável com texto simples.
@@ -46,17 +44,19 @@ class deepStat extends BlockPlugin {
         'totalIssues' =>$totalIssues,
         'totalArticles' =>$totalArticles,
         'totalAcess' =>$totalAcess,
+        'totalDownloads' =>$totalDownloads,
     ]);
     
     return parent::getContents($templateMgr, $request);
     }
 
-    //funcao que pega o numero de revistas
+//funcao que pega o numero de revistas
 	public function totalJournals() {
         try {
             $pdo = new PDO("mysql:host={$this->databaseHost};dbname={$this->databaseName}", $this->databaseUsername, $this->databasePassword);
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $query = "SELECT COUNT(*) as total FROM journals WHERE enabled = 1"; // Conta o número de revistas ativas.
+    // Conta o número de revistas ativas.
+            $query = "SELECT COUNT(*) as total FROM journals WHERE enabled = 1"; 
             $stmt = $pdo->query($query);
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             $totalRevistas = $result['total'];
@@ -67,59 +67,77 @@ class deepStat extends BlockPlugin {
         }
     }
 
-
 //funcao que pega o numero de fasciculos (issue)
-public function totalIssues() {
-    try {
-        $pdo = new PDO("mysql:host={$this->databaseHost};dbname={$this->databaseName}", $this->databaseUsername, $this->databasePassword);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $query = "SELECT COUNT(*) as total FROM issues WHERE published = 1"; // Conta o número de fascículos publicados.
-        $stmt = $pdo->query($query);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        $totalIssues = $result['total'];
+    public function totalIssues() {
+        try {
+            $pdo = new PDO("mysql:host={$this->databaseHost};dbname={$this->databaseName}", $this->databaseUsername, $this->databasePassword);
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    // Conta o número de fascículos publicados.
+            $query = "SELECT COUNT(*) as total FROM issues WHERE published = 1"; 
+            $stmt = $pdo->query($query);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            $totalIssues = $result['total'];
 
-        return $totalIssues;
-    } catch (PDOException $e) {
-        return "Erro ao conectar ao banco de dados: " . $e->getMessage();
+            return $totalIssues;
+        } catch (PDOException $e) {
+            return "Erro ao conectar ao banco de dados: " . $e->getMessage();
+        }
     }
-}
 
 //funcao que pega o numero de Artigos publicados
-public function totalArticles() {
-    try {
-        $pdo = new PDO("mysql:host={$this->databaseHost};dbname={$this->databaseName}", $this->databaseUsername, $this->databasePassword);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $query = "SELECT COUNT(*) as total FROM publications WHERE status = 3"; // Conta o número de artigos publicados.
-        // ou $query = "SELECT COUNT(*) as total FROM submissions WHERE status = 3";
-        $stmt = $pdo->query($query);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        $totalArticles = $result['total'];
+    public function totalArticles() {
+        try {
+            $pdo = new PDO("mysql:host={$this->databaseHost};dbname={$this->databaseName}", $this->databaseUsername, $this->databasePassword);
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    // Conta o número de artigos publicados.
+            $query = "SELECT COUNT(*) as total FROM publications WHERE status = 3"; 
+    // ou $query = "SELECT COUNT(*) as total FROM submissions WHERE status = 3";
+            $stmt = $pdo->query($query);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            $totalArticles = $result['total'];
 
-        return $totalArticles;
-    } catch (PDOException $e) {
-        return "Erro ao conectar ao banco de dados: " . $e->getMessage();
+            return $totalArticles;
+        } catch (PDOException $e) {
+            return "Erro ao conectar ao banco de dados: " . $e->getMessage();
+        }
     }
-}
 
 //funcao que pega o numero total de acessos ao portal
-public function totalAcess() {
-    try {
-        $pdo = new PDO("mysql:host={$this->databaseHost};dbname={$this->databaseName}", $this->databaseUsername, $this->databasePassword);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        //evitando linhas NULL
-        $query = "SELECT SUM(metric) as total FROM metrics WHERE submission_id IS NOT NULL"; // Soma os valores da coluna 'metric' onde 'submission_id' não é nulo.
-        $stmt = $pdo->query($query);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        $totalAcess = $result['total'];
+    public function totalAcess() {
+        try {
+            $pdo = new PDO("mysql:host={$this->databaseHost};dbname={$this->databaseName}", $this->databaseUsername, $this->databasePassword);
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    // Soma os valores da coluna 'metric' onde 'assoc_type' contém 256 ou 1048585.
+    //256 = visitas ao home de cada revista
+    //1048585 = visitas as páginas de artigos
+            $query = "SELECT SUM(metric) as total FROM metrics WHERE assoc_type IN (256, 1048585)"; 
+            $stmt = $pdo->query($query);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            $totalAcess = $result['total'];
 
-        return $totalAcess;
-    } catch (PDOException $e) {
-        return "Erro ao conectar ao banco de dados: " . $e->getMessage();
+            return $totalAcess;
+        } catch (PDOException $e) {
+            return "Erro ao conectar ao banco de dados: " . $e->getMessage();
+        }
     }
-}
 
+//funcao que pega o numero total de downloads ao portal
+    public function totalDownloads() {
+        try {
+            $pdo = new PDO("mysql:host={$this->databaseHost};dbname={$this->databaseName}", $this->databaseUsername, $this->databasePassword);
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    // Soma os valores da coluna 'metric' onde 'assoc_type' contém 256 ou 1048585.
+    //515 = downloads
+            $query = "SELECT SUM(metric) as total FROM metrics WHERE assoc_type IN (515)"; 
+            $stmt = $pdo->query($query);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            $totalDownloads = $result['total'];
 
-
+            return $totalDownloads;
+        } catch (PDOException $e) {
+            return "Erro ao conectar ao banco de dados: " . $e->getMessage();
+        }
+    }
 
 //////funcoes obrigatorias do ojs
 	/**
