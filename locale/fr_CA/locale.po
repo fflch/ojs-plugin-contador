@@ -1,0 +1,39 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-09-30T11:58:32-07:00\n"
+"PO-Revision-Date: 2020-06-03 18:03+0000\n"
+"Last-Translator: Daniel Silva Ferreira <daniel.ferreira@abcd.usp.br>\n"
+"Language-Team: Portuguese (Brazil) <http://translate.pkp.sfu.ca/projects/ojs/"
+"blocks-deepStat/fr_CA/>\n"
+"Language: fr_CA\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 3.9.1\n"
+
+msgid "plugins.block.deepStat.displayName"
+msgstr "Statistiques du portail"
+
+msgid "plugins.block.deepStat.description"
+msgstr "Ce plugin affiche des statistiques générales du portail des revues OJS. Il a été conçu pour être affiché sur la page d'accueil du portail."
+
+msgid "plugins.block.deepStat.title"
+msgstr "Statistiques générales :"
+
+msgid "plugins.block.deepStat.journals"
+msgstr "Revues"
+
+msgid "plugins.block.deepStat.issues"
+msgstr "Numéros"
+
+msgid "plugins.block.deepStat.articles"
+msgstr "Articles"
+
+msgid "plugins.block.deepStat.downloads"
+msgstr "Téléchargements"
+
+msgid "plugins.block.deepStat.hits"
+msgstr "Accès"

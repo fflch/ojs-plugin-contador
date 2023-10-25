@@ -102,6 +102,24 @@ class deepStat extends BlockPlugin {
         }
     }
 
+    //funcao que pega o numero total de downloads ao portal
+public function totalDownloads() {
+    try {
+        $pdo = new PDO("mysql:host={$this->databaseHost};dbname={$this->databaseName}", $this->databaseUsername, $this->databasePassword);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+// Soma os valores da coluna 'metric' onde 'assoc_type' contém 256 ou 1048585.
+//515 = downloads
+        $query = "SELECT SUM(metric) as total FROM metrics WHERE assoc_type IN (515)"; 
+        $stmt = $pdo->query($query);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $totalDownloads = $result['total'];
+
+        return $totalDownloads;
+    } catch (PDOException $e) {
+        return "Erro ao conectar ao banco de dados: " . $e->getMessage();
+    }
+}
+
 //funcao que pega o numero total de acessos ao portal
     public function totalAcess() {
         try {
@@ -116,24 +134,6 @@ class deepStat extends BlockPlugin {
             $totalAcess = $result['total'];
 
             return $totalAcess;
-        } catch (PDOException $e) {
-            return "Erro ao conectar ao banco de dados: " . $e->getMessage();
-        }
-    }
-
-//funcao que pega o numero total de downloads ao portal
-    public function totalDownloads() {
-        try {
-            $pdo = new PDO("mysql:host={$this->databaseHost};dbname={$this->databaseName}", $this->databaseUsername, $this->databasePassword);
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    // Soma os valores da coluna 'metric' onde 'assoc_type' contém 256 ou 1048585.
-    //515 = downloads
-            $query = "SELECT SUM(metric) as total FROM metrics WHERE assoc_type IN (515)"; 
-            $stmt = $pdo->query($query);
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            $totalDownloads = $result['total'];
-
-            return $totalDownloads;
         } catch (PDOException $e) {
             return "Erro ao conectar ao banco de dados: " . $e->getMessage();
         }
@@ -156,10 +156,10 @@ class deepStat extends BlockPlugin {
 	}
 
 	function getDisplayName() {
-		return __('Deep Statistics');
+		return __('plugins.block.deepStat.displayName');
 	}
     function getDescription() {
-		return __('Deep Statistics');
+		return __('plugins.block.deepStat.description');
 	}
 }
 

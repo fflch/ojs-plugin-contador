@@ -1,15 +1,13 @@
-{**
- * plugins/blocks/deepStat/block.tpl
- *}
- <div class="pkp_block block_madeBy">
- <h3>{$madeByText|escape}</h3>
+{* plugins/blocks/deepStat/block.tpl *}
 
- Quantidade de Revistas: {$totalRevistas}<br>
- Quantidade de Fascículos: {$totalIssues}<br>
- Quantidade de Artigos: {$totalArticles}<br>
- Quantidade de Acessos: {$totalAcess}<br>
- Quantidade de Downloads: {$totalDownloads}
+<div class="pkp_block block_madeBy">
+    <h3>{translate key="plugins.block.deepStat.title"}</h3>
 
+        <b>{$totalRevistas}</b> {translate key="plugins.block.deepStat.journals"}<br>
+        <b>{$totalIssues}</b> {translate key="plugins.block.deepStat.issues"}<br>
+        <b>{$totalArticles}</b> {translate key="plugins.block.deepStat.articles"}<br>
+        <b>{$totalDownloads}</b> {translate key="plugins.block.deepStat.downloads"}<br>
+        <b>{$totalAcess}</b> {translate key="plugins.block.deepStat.hits"}
 
 
 
