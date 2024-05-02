@@ -109,7 +109,7 @@ public function totalDownloads() {
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 // Soma os valores da coluna 'metric' onde 'assoc_type' contém 256 ou 1048585.
 //515 = downloads
-        $query = "SELECT SUM(metric) as total FROM metrics WHERE assoc_type IN (515)"; 
+        $query = "SELECT SUM(metric) as total FROM metrics_submission WHERE assoc_type IN (515)"; 
         $stmt = $pdo->query($query);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         $totalDownloads = $result['total'];
@@ -128,7 +128,7 @@ public function totalDownloads() {
     // Soma os valores da coluna 'metric' onde 'assoc_type' contém 256 ou 1048585.
     //256 = visitas ao home de cada revista
     //1048585 = visitas as páginas de artigos
-            $query = "SELECT SUM(metric) as total FROM metrics WHERE assoc_type IN (256, 1048585)"; 
+            $query = "SELECT SUM(metric) as total FROM metrics_submission WHERE assoc_type IN (256, 1048585)"; 
             $stmt = $pdo->query($query);
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             $totalAcess = $result['total'];
